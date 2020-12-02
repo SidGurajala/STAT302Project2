@@ -1,0 +1,15 @@
+Package: STAT302Project2
+Title: Project 2 for STAT302
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Saisriram",
+           family = "Gurajala",
+           role = c("aut", "cre"),
+           email = "sgurajala99@gmail.com")
+Description: This package is to be submitted as the second project for 
+    STAT302 at UW. 
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
