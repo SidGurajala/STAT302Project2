@@ -1,0 +1,26 @@
+---
+title: "Project 2: STAT302Project2 Tutorial"
+author: "Saisriram S Gurajala" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{STAT302Project2 Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# install.packages("devtools")
+devtools::install_github("SidGurajala/STAT302Project2", build_vignette = TRUE, build_opts = c())
+library(STAT302Project2)
+#Use this to view this vignette in the STAT302Project2 HTML help
+help(package = "STAT302Project2", help_type = "html")
+#Use this to view the vignette as an isolated html file
+utils::browseVignettes(package = "STAT302Project2")
+```
