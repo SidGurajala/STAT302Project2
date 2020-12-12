@@ -22,13 +22,13 @@ List of predicted class vector \code{cl} and average cv error.
 This function returns knn average cv error and predictions.
 }
 \examples{
-my_df <- penguins
+my_df <- my_penguins
 my_df <- my_df \%>\%
- select(c(species, bill_length_mm, bill_depth_mm,
+ dplyr::select(c(species, bill_length_mm, bill_depth_mm,
           flipper_length_mm, body_mass_g))
 my_df$species <- as.character(my_df$species)
 my_df <- na.omit(my_df)
-my_df_class <- my_df \%>\% pull(species)
+my_df_class <- my_df \%>\% dplyr::pull(species)
 my_knn_cv(train = my_df, cl = "species", k_nn = 1, k_cv = 5)
 my_knn_cv(train = my_df, cl = "species", k_nn = 5, k_cv = 5)
 

@@ -12,13 +12,13 @@
 #' @return List of predicted class vector \code{cl} and average cv error.
 #'
 #' @examples
-#' my_df <- penguins
+#' my_df <- my_penguins
 #' my_df <- my_df %>%
-#'  select(c(species, bill_length_mm, bill_depth_mm,
+#'  dplyr::select(c(species, bill_length_mm, bill_depth_mm,
 #'           flipper_length_mm, body_mass_g))
 #' my_df$species <- as.character(my_df$species)
 #' my_df <- na.omit(my_df)
-#' my_df_class <- my_df %>% pull(species)
+#' my_df_class <- my_df %>% dplyr::pull(species)
 #' my_knn_cv(train = my_df, cl = "species", k_nn = 1, k_cv = 5)
 #' my_knn_cv(train = my_df, cl = "species", k_nn = 5, k_cv = 5)
 #'
@@ -33,29 +33,29 @@ my_knn_cv <- function(train, cl, k_nn, k_cv) {
   #sets up fold to split by
   fold <- sample(rep(1:k_cv, length = nrow(train)))
   #mutates input df to include new fold variable
-  train <- train %>% mutate(fold = fold)
+  train <- train %>% dplyr::mutate(fold = fold)
   #empty vector for cv_error rate
   cv_error_folds <- vector()
   #for loop for 1 to k_cv
   for (i in 1:k_cv) {
     #training df for knn fuction
     data_train <- train %>%
-      filter(fold != i) %>%
-      select(-cl, -fold)
+      dplyr::filter(fold != i) %>%
+      dplyr::select(-cl, -fold)
     #testing df for knn function
     data_test <- train %>%
-      filter(fold == i) %>%
-      select(-cl, -fold)
+      dplyr::filter(fold == i) %>%
+      dplyr::select(-cl, -fold)
     #training class vector for knn function
     cl_train <- train %>%
-      filter(fold != i) %>%
-      pull(cl)
+      dplyr::filter(fold != i) %>%
+      dplyr::pull(cl)
     #testing class vector for knn function
     cl_test <- train %>%
-      filter(fold == i) %>%
-      pull(cl)
+      dplyr::filter(fold == i) %>%
+      dplyr::pull(cl)
     #stores class predictions for each fold
-    class_folds <- knn(train = data_train,
+    class_folds <- class::knn(train = data_train,
                        test = data_test,
                        cl = cl_train,
                        k = k_nn)
@@ -63,11 +63,12 @@ my_knn_cv <- function(train, cl, k_nn, k_cv) {
     cv_error_folds[i] <- 1 - (sum(class_folds == cl_test) / length(class_folds))
   }
   #assigns class vector from full df
-  total_cl <- train %>% pull(cl)
+  total_cl <- train %>% dplyr::pull(cl)
   #training df from full df
-  total_train <- train %>% select(-cl)
+  total_train <- train %>% dplyr::select(-cl)
   #output class predictions for complete df
-  class <- knn(train = total_train, test = total_train, cl = total_cl, k = k_nn)
+  class <- class::knn(train = total_train, test = total_train,
+                      cl = total_cl, k = k_nn)
   #averages cv error
   cv_error <- mean(cv_error_folds)
   #list of avg cv_error and knn preds from total df
