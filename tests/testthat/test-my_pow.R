@@ -1,4 +1,3 @@
-#within test-my_pow.R
 test_that("my_pow works mathematically", {
   expect_equal(my_pow(2), 4)
   expect_equal(my_pow(2, power = 3), 8)
