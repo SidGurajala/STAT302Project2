@@ -17,7 +17,6 @@ test_that("output classes are correct type", {
 test_that("wrong inputs throw errors", {
   expect_error(my_knn_cv(train = my_df, cl = "bad", k_nn = 1, k_cv = 5))
   expect_error(my_knn_cv(train = my_df, cl = "species", k_nn = "one", k_cv = 5))
-  expect_error(my_knn_cv(train = my_df, cl = "species", k_nn = 1, k_cv = "two"))
-  expect_error(my_knn_cv(train = my_df[[1]], cl = "species",
-                         k_nn = 1, k_cv = 5))
+  expect_error(my_knn_cv(train = my_df, cl = "species", k_nn = 1))
+  expect_error(my_knn_cv(x, cl = "species", k_nn = 1, k_cv = 5))
 })
