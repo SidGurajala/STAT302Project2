@@ -5,7 +5,7 @@
 #'
 #' @param k The number of folds for k fold cross validation for \code{my_rf_cv}.
 #'
-#' @keywords Statistical Prediction
+#' @keywords Prediction
 #'
 #' @return Numeric of average mean squared error from \code{my_rf_cv}
 #'   predictions.

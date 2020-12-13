@@ -7,7 +7,7 @@
 #' @param k_nn Number of k nearest numbers to be used by \code{knn}.
 #' @param k_cv Number of folds for k fold cross validation.
 #'
-#' @keywords Statistical Prediction
+#' @keywords Prediction
 #'
 #' @return List of predicted class vector \code{cl} and average cv error.
 #'

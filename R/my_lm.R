@@ -6,6 +6,8 @@
 #' @param data input data frame to be fitted for a model by \code{my_lm}.
 #' @param formula input formula object to be used for regression model.
 #'
+#' @keywords Prediction, Inference
+#'
 #' @return data frame of beta coefficient estimates, standard error, t value,
 #'   and p-value.
 #'

@@ -8,6 +8,8 @@
 #'   "less," or "greater."
 #' @param mu numeric input of mu value for t test.
 #'
+#' @keywords inference
+#'
 #' @return List of test statistic, df, input character string, and p value.
 #'
 #' @examples
