@@ -14,7 +14,174 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+# PROJECT 2: R PACKAGE DEVELOPMENT
 
+## INTRODUCTION 
+
+  This package is meant to serve as my submission for Project 2 of STAT302
+at the University of Washington. The package includes functions replicating 
+the internal function of R's t test, lm, randomForest, and knn functions. 
+This package can be installed from github 
+[here](https://github.com/SidGurajala/STAT302Project2). Underneath I have
+included commands in R to install this package in R from github and 
+to call this package. 
 ```{r setup}
+remotes::install_github("https://github.com/SidGurajala/STAT302Project2")
 library(STAT302Project2)
 ```
+
+### my_t_test
+
+#### Two Sided 
+```{r}
+#extract lifeExp column from my_gapminder
+data_one <- my_gapminder$lifeExp
+#calling my_t_test function
+my_t_test(data_one, "two.sided", 60)
+```
+
+Assuming the null hypothesis is true, the probability of observing a result 
+as or more extreme than what was observed is 9.32%. Therefore, I fail to reject 
+the null hypothesis: mu is equal to 60. 
+
+#### Less Than
+```{r}
+my_t_test(data_one, "less", 60)
+```
+
+Assuming the null hypothesis is true, the probability of observing a result 
+as or more extreme than what was observed is 4.66%. I therefore reject the null 
+hypothesis; mu is not equal to 60, mu is less than 60. 
+
+#### Greater Than
+```{r}
+#calling my_t_test function
+my_t_test(data_one, "greater", 60)
+```
+
+Assuming the null hypothesis is true, the probability of observing a result 
+as or more extreme than what was observed is 95.3%. I therefore fail to reject 
+the null hypothesis: mu is equal to 60. 
+
+### my_lm
+```{r}
+#calling my_lm function
+my_lm(my_gapminder, lifeExp ~ gdpPercap + continent)
+```
+
+  With all other covariates remaining equal, the change in life 
+expectancy corresponding to one unit change in gdpPercap is 4.42 x 10 ^ -4.
+The null hypothesis for the gdpPercap coefficient is that the gdpPercap 
+coefficient is 0. The alternative hypothesis is that the gpdPercap coefficient 
+is not 0. Given a p value of 8.55 x 10 ^ -73 and a cut off of p = 0.05, 
+I reject the null hypothesis and support the alternative hypothesis that the
+gdpPercap coefficient is not 0. 
+
+```{r fig.height = 5, fig.width = 10}
+#storing lifeExp lm model in my_model
+my_model <- lm(lifeExp ~ gdpPercap + continent, my_gapminder)
+#getting fitted values 
+model_fitted <- fitted(my_model)
+#stores actual data and fitted data in data frame
+my_df <- data.frame(actual = my_gapminder$lifeExp, fitted = model_fitted)
+#creates g_gapminder actual vs fitted data graph
+g_gapminder <- ggplot2::ggplot(data = my_df, 
+                               ggplot2::aes(x = fitted, y = actual)) +
+                ggplot2::geom_point() +
+                ggplot2::geom_abline(slope = 1, intercept = 0, 
+                                    col = "red", lty = 2) +
+                ggplot2::theme_bw(base_size = 20) +
+                ggplot2::labs(x = "Fitted Values", y = "Actual Values", 
+                              title = "Actual vs Fitted Values") +
+                ggplot2::scale_x_continuous()
+                
+#display g_gapminder object
+g_gapminder
+```
+
+  This plot tells that the model works well for life expectancies around 
+  70-80, but varies widely from the actual values from the ages of 50 to 65. The 
+  model does not predict life expectancies from age 0 to about 50. 
+  
+### my_knn_cv
+```{r}
+#setting up penguins data set
+my_df <- my_penguins
+my_df <- my_df %>%
+          dplyr::select(c(species, bill_length_mm, bill_depth_mm,
+                          flipper_length_mm, body_mass_g))
+my_df$species <- as.character(my_df$species)
+my_df <- na.omit(my_df)
+my_df_class <- my_df %>% dplyr::pull(species)
+
+#calling my_knn_cv
+cv_error_rates <- vector()
+tse_rates <- vector()
+for (i in 1:10) {
+  output <- my_knn_cv(train = my_df, cl = "species", k_nn = i, k_cv = 5)
+  cv_error_rates[i] <- output[[1]]
+  tse_rates[i] <- sum(as.character(output[[2]]) != my_df_class) / 
+                  length(my_df_class)
+}
+
+data_statistics <- data.frame(cv_error_rates = cv_error_rates,
+                              tse_rates = tse_rates)
+data_statistics
+```
+
+Based on purely training misclassification rates, I would pick k_nn = 1 which 
+had a tse_rate (training set error rate) of 0.00000. CV error rates, 
+the rate at which the algorithm incorrectly predicts the value of the fifth fold
+of a data set -- the first four folds of which are used as training data -- 
+tell a similar story. Based on cv error rates I would also pick k_nn = 1. 
+In practice I would probably pick k_nn = 5, as that
+would give the algorithm with more explanatory power and would generally 
+be more reliable than using one nearest neighbor. This is because looking at 
+5 nearest neighbors would allow the algorithm to better classify the 
+class of the predicted variable. 
+
+### my_rf_cv
+```{r fig.height = 5, fig.width = 10}
+mse_vector_two <- vector()
+for (i in 1:30) {
+  mse_vector_two[i] <- my_rf_cv(2)
+}
+
+mse_vector_five <- vector()
+for (i in 1:30) {
+  mse_vector_five[i] <- my_rf_cv(5)
+}
+
+mse_vector_ten <- vector()
+for (i in 1:30) {
+  mse_vector_ten[i] <- my_rf_cv(10)
+}
+
+mse_two_df <- data.frame(MSE = mse_vector_two) %>% 
+               dplyr::mutate(k = "k = 2")
+mse_five_df <- data.frame(MSE = mse_vector_five) %>% 
+                dplyr::mutate(k = "k = 5")
+mse_ten_df <- data.frame(MSE = mse_vector_ten) %>% 
+               dplyr::mutate(k = "k = 10")
+mse_df <- rbind(mse_two_df, mse_five_df, mse_ten_df)
+ggplot2::ggplot(data = mse_df) + 
+  ggplot2::geom_boxplot(ggplot2::aes(x = k, y = MSE, color = k)) +
+  ggplot2::labs(x = "Number of folds", y = "Mean Squared Error",
+                title = "MSE for 30 randomForests with 3, 5, and 10 folds") +
+  ggplot2::theme_bw()
+
+kvalues <- c(2, 5, 10)
+means <- c(mean(mse_vector_two), mean(mse_vector_five), mean(mse_vector_ten))
+sds <- c(sd(mse_vector_two), sd(mse_vector_five), sd(mse_vector_ten))
+
+mse_table <- data.frame("K Value" = kvalues,
+                        "Mean MSE" = means,
+                        "SD" = sds)
+mse_table
+```
+
+The mean MSE is lower for k = 10 folds than for k = 2 or k = 5 folds. k = 2 
+folds has the highest mean MSE value. k = 10 folds also has the lowest 
+standard deviation of all folds, and k = 2 folds has the highest. This makes
+sense given that a higher number of folds leads to higher accuracy and therefore
+less mean squared error. 
