@@ -123,9 +123,10 @@ for (i in 1:10) {
   tse_rates[i] <- sum(as.character(output[[2]]) != my_df_class) / 
                   length(my_df_class)
 }
-
+#storing cv error rates and tse rates in df
 data_statistics <- data.frame(cv_error_rates = cv_error_rates,
                               tse_rates = tse_rates)
+#output df 
 data_statistics
 ```
 
@@ -142,41 +143,49 @@ class of the predicted variable.
 
 ### my_rf_cv
 ```{r fig.height = 5, fig.width = 10}
+#for loop filling mse_vector 2 with 30 k - 2 simulations
 mse_vector_two <- vector()
 for (i in 1:30) {
   mse_vector_two[i] <- my_rf_cv(2)
 }
-
+#for loop filling mse_vector_five with 30 k = 5 simulations
 mse_vector_five <- vector()
 for (i in 1:30) {
   mse_vector_five[i] <- my_rf_cv(5)
 }
-
+#for loop filling mse_vector_ten with 30 k = 10 simulations
 mse_vector_ten <- vector()
 for (i in 1:30) {
   mse_vector_ten[i] <- my_rf_cv(10)
 }
-
+#creating DF of k value and MSE value for each k condition
 mse_two_df <- data.frame(MSE = mse_vector_two) %>% 
                dplyr::mutate(k = "k = 2")
 mse_five_df <- data.frame(MSE = mse_vector_five) %>% 
                 dplyr::mutate(k = "k = 5")
 mse_ten_df <- data.frame(MSE = mse_vector_ten) %>% 
                dplyr::mutate(k = "k = 10")
+#putting all data frames together
 mse_df <- rbind(mse_two_df, mse_five_df, mse_ten_df)
-ggplot2::ggplot(data = mse_df) + 
-  ggplot2::geom_boxplot(ggplot2::aes(x = k, y = MSE, color = k)) +
-  ggplot2::labs(x = "Number of folds", y = "Mean Squared Error",
-                title = "MSE for 30 randomForests with 3, 5, and 10 folds") +
-  ggplot2::theme_bw()
-
+#code for plot 
+g_rf_cv <- ggplot2::ggplot(data = mse_df) + 
+            ggplot2::geom_boxplot(ggplot2::aes(x = k, y = MSE, fill = k)) +
+            ggplot2::labs(x = "Number of folds", y = "Mean Squared Error",
+                          title = "MSE for 30 randomForests 
+                          with 2, 5, and 10 folds") +
+            ggplot2::theme_bw()
+g_rf_cv
+#creating vector of k values
 kvalues <- c(2, 5, 10)
+#calculating means
 means <- c(mean(mse_vector_two), mean(mse_vector_five), mean(mse_vector_ten))
+#calculating standard deviations 
 sds <- c(sd(mse_vector_two), sd(mse_vector_five), sd(mse_vector_ten))
-
+#creating mse_table
 mse_table <- data.frame("K Value" = kvalues,
                         "Mean MSE" = means,
                         "SD" = sds)
+#display table
 mse_table
 ```
 
