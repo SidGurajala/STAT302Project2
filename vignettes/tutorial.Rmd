@@ -1,7 +1,8 @@
 ---
 title: "Project 2: STAT302Project2 Tutorial"
-author: "Saisriram S Gurajala" 
+author: "Sid Gurajala" 
 output: rmarkdown::html_vignette
+collobarated with: "Maya Chen"
 vignette: >
   %\VignetteIndexEntry{STAT302Project2 Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
