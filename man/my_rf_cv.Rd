@@ -23,4 +23,3 @@ my_rf_cv(10)
 
 }
 \keyword{Prediction}
-\keyword{Statistical}

@@ -24,3 +24,5 @@ my_lm(my_penguins, bill_length_mm ~ bill_depth_mm + flipper_length_mm)
 my_lm(my_penguins, flipper_length_mm ~ bill_length_mm + bill_depth_mm)
 
 }
+\keyword{Inference}
+\keyword{Prediction,}

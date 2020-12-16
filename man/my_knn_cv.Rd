@@ -34,4 +34,3 @@ my_knn_cv(train = my_df, cl = "species", k_nn = 5, k_cv = 5)
 
 }
 \keyword{Prediction}
-\keyword{Statistical}

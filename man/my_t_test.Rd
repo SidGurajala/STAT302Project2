@@ -27,3 +27,4 @@ my_t_test(sample_data, "two.sided", 10)
 my_t_test(sample_data, "less", 10)
 
 }
+\keyword{inference}
