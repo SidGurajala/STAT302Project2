@@ -26,7 +26,7 @@ This package can be installed from github
 included commands in R to install this package in R from github and 
 to call this package. 
 ```{r setup}
-remotes::install_github("https://github.com/SidGurajala/STAT302Project2")
+#remotes::install_github("https://github.com/SidGurajala/STAT302Project2")
 library(STAT302Project2)
 ```
 
@@ -83,16 +83,21 @@ my_model <- lm(lifeExp ~ gdpPercap + continent, my_gapminder)
 #getting fitted values 
 model_fitted <- fitted(my_model)
 #stores actual data and fitted data in data frame
-my_df <- data.frame(actual = my_gapminder$lifeExp, fitted = model_fitted)
+my_df <- data.frame(actual = my_gapminder$lifeExp, 
+                    fitted = model_fitted,
+                    continent = my_gapminder$continent)
 #creates g_gapminder actual vs fitted data graph
 g_gapminder <- ggplot2::ggplot(data = my_df, 
-                               ggplot2::aes(x = fitted, y = actual)) +
+                               ggplot2::aes(x = fitted, 
+                                            y = actual, 
+                                            color = continent)) +
                 ggplot2::geom_point() +
                 ggplot2::geom_abline(slope = 1, intercept = 0, 
                                     col = "red", lty = 2) +
                 ggplot2::theme_bw(base_size = 20) +
                 ggplot2::labs(x = "Fitted Values", y = "Actual Values", 
-                              title = "Actual vs Fitted Values") +
+                              title = 
+                                "Gapminder life expectancy: Actual vs Fitted") +
                 ggplot2::scale_x_continuous()
                 
 #display g_gapminder object
